@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To-Do List</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="container">
+    <h1>To-Do List</h1>
+    <div id="time"></div>
+    <input type="text" id="task-input" placeholder="Add a new task...">
+    <ul id="task-list"></ul>
+</div>
+
+<script>
+function updateTime() {
+    const now = new Date();
+    const timeElement = document.getElementById('time');
+    const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+    const timeString = now.toLocaleTimeString('en-US', options);
+    timeElement.textContent = timeString;
+}
+
+function addTask(task) {
+    const taskList = document.getElementById('task-list');
+    const li = document.createElement('li');
+    li.className = 'task';
+    li.innerHTML = `
+        <span>${task}</span>
+        <button class="delete">Delete</button>
+        <button class="complete">Complete</button>
+    `;
+    taskList.appendChild(li);
+}
+
+document.getElementById('task-input').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        const taskInput = document.getElementById('task-input');
+        const task = taskInput.value.trim();
+        if (task !== '') {
+            addTask(task);
+            taskInput.value = '';
+        }
+    }
+});
+
+document.getElementById('task-list').addEventListener('click', function(event) {
+    const target = event.target;
+    if (target.classList.contains('delete')) {
+        const taskItem = target.parentElement;
+        taskItem.remove();
+    } else if (target.classList.contains('complete')) {
+        const taskSpan = target.parentElement.querySelector('span');
+        taskSpan.classList.toggle('completed');
+    }
+});
+
+setInterval(updateTime, 1000);
+</script>
+</body>
+</html>
